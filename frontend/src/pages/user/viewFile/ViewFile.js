@@ -10,10 +10,10 @@ import Paper from "@mui/material/Paper";
 import Navbar from "../../../components/navbar/Navbar";
 import SideBar from "../../../components/sidebar/SideBar";
 import axios from "axios";
-import { BaseUrl } from "../../../API/BaseUrl";
+import { BaseUrl, deleteFile } from "../../../API/BaseUrl";
 import { Button } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-
+import { MdDelete } from "react-icons/md";
 
 function ViewFile() {
   const [pdf, setPdf] = useState();
@@ -30,7 +30,7 @@ function ViewFile() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data.data,'askdabfkjsdbfs');
+      console.log(response.data.data, "askdabfkjsdbfs");
       if (response.data.success) {
         setPdf(response.data.data);
       } else {
@@ -38,7 +38,7 @@ function ViewFile() {
       }
     } catch (error) {}
   };
-  console.log(pdf)
+  console.log(pdf);
 
   const download = async (item) => {
     try {
@@ -55,6 +55,10 @@ function ViewFile() {
         });
       });
     } catch (err) {}
+  };
+
+  const handleDelete = (id, userId) => {
+    deleteFile(id, userId);
   };
 
   return (
@@ -88,12 +92,21 @@ function ViewFile() {
                       >
                         <TableCell>{index + 1}</TableCell>
                         <TableCell component="th" scope="row">
-                          <img style={{width:'150px',height:'130px'}} src={row.fileid} alt="" />
+                          <img
+                            style={{ width: "150px", height: "130px" }}
+                            src={row.fileid}
+                            alt=""
+                          />
                         </TableCell>
                         <TableCell align="right">
                           <Button onClick={() => download(row)}>
                             <FileDownloadIcon />
                           </Button>
+                        </TableCell>
+                        <TableCell>
+                          <MdDelete
+                            onClick={() => handleDelete(row._id, row.userid)}
+                          />
                         </TableCell>
                         {/* <TableCell align="right">{row.fat}</TableCell>
               <TableCell align="right">{row.carbs}</TableCell>
